@@ -46,7 +46,8 @@ namespace XMLReferrerExtractor
                     if (reader.Name.Equals("transaction"))
                     {
                         //cycle through all attributes of the transaction
-                        for (int i = 0; i < reader.AttributeCount; i++) {
+                        for (int i = 0; i < reader.AttributeCount; i++)
+                        {
                             //look for the method attribute
                             if (reader.Name.Equals("method"))
                             {
@@ -67,12 +68,27 @@ namespace XMLReferrerExtractor
                         }
                     }
                     writer.WriteAttributes(reader, true);
-                    
-                    //The below ensures that ssl tags have a short end tag
-                    if (reader.Name.Equals("ssl"))
+                    if (reader.IsEmptyElement)
                     {
                         writer.WriteEndElement();
                     }
+                    ////The below checks short end tags
+                    //if (reader.Name.Equals("ssl")
+                    //    || reader.Name.Equals("alpn"))
+                    //{
+                    //    writer.WriteEndElement();
+                    //}
+                    //else if (reader.Name.Equals("first-line"))
+                    //{
+                    //    //if the first-line has a short end tag, maintain it as a short end tag
+                    //    if (reader.IsEmptyElement)
+                    //    {
+                    //        writer.WriteEndElement();
+                    //    }
+                    //}
+
+
+
                 }
                 #endregion
                 #region Encounter end elements
@@ -82,6 +98,9 @@ namespace XMLReferrerExtractor
                     writer.WriteEndElement();
                     //WriteAttributes(reader, writer);//is this line neccessary? No it isn't.
                 }
+                //else if (reader.IsEmptyElement) {
+                //    writer.WriteEndElement();
+                //}
                 #endregion
                 #region Encounter attributes outside of elements
                 //takes care of all other elements' attributes, but this shouldn't be reached.
@@ -220,21 +239,21 @@ namespace XMLReferrerExtractor
                                     //rewrite host into referer
                                     if (reader.GetAttribute("protocol").Equals("https"))
                                     {
-                                        writer.WriteAttributeString(reader.Name, "    Referer: " + dictionary[tempId]);
+                                        writer.WriteAttributeString(reader.Name, "    Referer: " + dictionary[tempId] + " ");
                                     }
                                     else {
-                                        writer.WriteAttributeString(reader.Name, "     Referer: " + dictionary[tempId]);
+                                        writer.WriteAttributeString(reader.Name, "     Referer: " + dictionary[tempId] + " ");
                                     }
                                     rCount++;
                                 }
                                 else {
                                     if (reader.GetAttribute("protocol").Equals("https"))
                                     {
-                                        writer.WriteAttributeString(reader.Name, "    " + "No Referer");
+                                        writer.WriteAttributeString(reader.Name, "    " + "No Referer ");
                                     }
                                     else
                                     {
-                                        writer.WriteAttributeString(reader.Name, "      " + "No Referer");
+                                        writer.WriteAttributeString(reader.Name, "      " + "No Referer ");
                                     }
                                 }
                             }
@@ -256,14 +275,27 @@ namespace XMLReferrerExtractor
                     }
                     writer.WriteAttributes(reader, true);
 
-                    //The below ensures that ssl tags have a short end tag
-                    if (reader.Name.Equals("ssl"))
-                    {
+                    ////The below ensures that ssl tags have a short end tag
+                    //if (reader.Name.Equals("ssl")
+                    //    || reader.Name.Equals("alpn"))
+                    //{
+                    //    writer.WriteEndElement();
+                    //}
+                    //else if (reader.Name.Equals("first-line"))
+                    //{
+                    //    //if the first-line has a short end tag, maintain it as a short end tag
+                    //    if (reader.IsEmptyElement)
+                    //    {
+                    //        writer.WriteEndElement();
+                    //    }
+                    //}
+                    if (reader.IsEmptyElement) {
                         writer.WriteEndElement();
                     }
                 }
                 #endregion
                 #region Encounter end elements
+                //else if ((reader.NodeType == XmlNodeType.EndElement) || reader.IsEmptyElement)
                 else if (reader.NodeType == XmlNodeType.EndElement)
                 {
                     //Console.Write("\n3");
@@ -304,13 +336,50 @@ namespace XMLReferrerExtractor
 
             return matchTransactionAndRefererCount;
         }
+        internal static void ScanForEmpty(string xmlFile) {
+            #region Xml Reader initialization
+            XmlTextReader reader = new XmlTextReader(xmlFile);
+            reader.WhitespaceHandling = WhitespaceHandling.All;
+            XmlValidatingReader vr = new XmlValidatingReader(reader);
+            //XmlReaderSettings xmlReaderSettings = new XmlReaderSettings();
+            vr.ValidationType = ValidationType.None;
+            vr.EntityHandling = EntityHandling.ExpandEntities;
+            #endregion
+
+            reader.MoveToContent();
+            do
+            {
+                if (reader.IsEmptyElement) {
+                    if (reader.Name.Equals("ssl"))
+                    {
+
+                    }
+                    else if (reader.Name.Equals("first-line"))
+                    {
+
+                    }
+                    else if (reader.Name.Equals("alpn"))
+                    {
+
+                    }
+                    else {
+                        Console.WriteLine("Empty: " + reader.Name);
+                    }
+                }
+
+            } while (reader.Read());
+        }
+
         public static void Main(string[] args) {
             int transactionCount = 0;
             int refererCount = 0;
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
             bool transactionAndRefererIntegrity = false;
+            string xmlFile = "testlog.xml";
 
-            transactionCount = GenerateTransactionIdentifiers("test.xml");
+            //ScanForEmpty(xmlFile);
+
+            transactionCount = GenerateTransactionIdentifiers(xmlFile);
             Console.WriteLine("Transaction Count: {0}", transactionCount);
 
             refererCount = GenerateRefererDictionary(dictionary);
