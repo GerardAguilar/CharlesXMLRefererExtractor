@@ -1,7 +1,7 @@
 # CharlesXMLRefererExtractor
 
 
-1. Export Charles Log File (.chls) as an XML Session File (.xml)
+1a. Export Charles Log File (.chls) as an XML Session File (.xml)
 
 2a. Rename as testlog.xml and place into Debug folder of the XMLReferrerExtractor project
 
@@ -9,7 +9,7 @@
 
 2c. If the debug folder doesn't show up, make sure you built the project at least once in Visual Studio.
 
-3a. Replace: \<?xml version="1.0" encoding="UTF-8"?>\<!DOCTYPE charles-session SYSTEM "http://www.charlesproxy.com/dtd/charles-session-1_0.dtd">
+3a. In the testlog.xml file, replace: \<?xml version="1.0" encoding="UTF-8"?>\<!DOCTYPE charles-session SYSTEM "http://www.charlesproxy.com/dtd/charles-session-1_0.dtd">
 
 3b. With: \<?xml version="1.0" encoding="iso-8859-1"?>
 
