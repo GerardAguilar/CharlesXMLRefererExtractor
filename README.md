@@ -9,9 +9,9 @@
 
 2c. If the debug folder doesn't show up, make sure you built the project at least once in Visual Studio.
 
-3a. Replace: <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE charles-session SYSTEM "http://www.charlesproxy.com/dtd/charles-session-1_0.dtd">
+3a. Replace: \<?xml version="1.0" encoding="UTF-8"?>\<!DOCTYPE charles-session SYSTEM "http://www.charlesproxy.com/dtd/charles-session-1_0.dtd">
 
-3b. With: <?xml version="1.0" encoding="iso-8859-1"?>
+3b. With: \<?xml version="1.0" encoding="iso-8859-1"?>
 
 4a. Run XMLReferrerExtractor.exe (found in the same folder) or with Visual Studio open, choose "Start without Debugging"
 
