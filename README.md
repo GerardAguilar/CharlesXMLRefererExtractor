@@ -1,5 +1,6 @@
 # CharlesXMLRefererExtractor
 
+
 1. Export Charles Log File (.chls) as an XML Session File (.xml)
 
 2a. Rename as testlog.xml and place into Debug folder of the XMLReferrerExtractor project
